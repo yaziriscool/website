@@ -481,6 +481,38 @@
         .bounce-effect {
             animation: bounce-anim 2s infinite;
         }
+        
+        @keyframes bounce-anim {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+        
+        .partner-image-container {
+            margin: 20px 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .partner-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.5s ease;
+        }
+        
+        .partner-image:hover {
+            transform: scale(1.05);
+        }
 
         @keyframes gentle-float {
             0%, 100% {
@@ -557,9 +589,11 @@
                 </div>
                 
                 <div class="partner-card" style="animation: gentle-float 6s ease-in-out infinite; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">
-                    <h3>Partner With Us</h3>
-                    <p>Interested in partnering with YLM Movement Club? We're always looking for exciting collaborations to expand our community!</p>
-                    <p>Reach out to us on Discord to discuss potential partnerships.</p>
+                    <h3>Join GLM!</h3>
+                    <div class="partner-image-container">
+                        <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=612,h=440,fit=crop/YX4lbpj3v7fbjMaq/screenshot-2024-08-30-202507-YX4lbpJkEpHnDlKv.png" alt="GLM" class="partner-image">
+                    </div>
+                    <p>Join GLM they're just like us but more savage!</p>
                 </div>
             </div>
         </main>
