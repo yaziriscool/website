@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Green Website</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #43a047;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            background-color: #2e7d32;
+            padding: 0.5rem;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        nav li {
+            margin: 0 1rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: #1b5e20;
+        }
+        
+        nav a.active {
+            background-color: #1b5e20;
+        }
+        
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h1, h2, h3 {
+            color: #2e7d32;
+        }
+        
+        .green-button {
+            background-color: #43a047;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .green-button:hover {
+            background-color: #2e7d32;
+        }
+        
+        .team-member {
+            display: flex;
+            margin-bottom: 2rem;
+            background-color: #f1f8e9;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .team-img {
+            width: 120px;
+            height: 120px;
+            background-color: #81c784;
+            border-radius: 50%;
+            margin-right: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .team-info {
+            flex: 1;
+        }
+        
+        .mission-vision {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .mission, .vision {
+            flex: 1;
+            background-color: #f1f8e9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #43a047;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #81c784;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 1rem;
+            background-color: #f1f8e9;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #43a047;
+            border-radius: 50%;
+            top: 20px;
+            right: -10px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        footer {
+            background-color: #43a047;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Green Website</h1>
+        <p>A simple and refreshing green-themed website</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Gallery</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section>
+            <h2>About Us</h2>
+            <p>Welcome to Green Website, where we embrace the power of nature and sustainability in everything we do. Founded in 2020, we've been committed to creating digital experiences that are not only visually appealing but also environmentally conscious.</p>
+        </section>
+        
+        <section>
+            <h2>Our Mission & Vision</h2>
+            <div class="mission-vision">
+                <div class="mission">
+                    <h3>Mission</h3>
+                    <p>To provide innovative digital solutions while promoting environmental awareness and sustainable practices in the tech industry.</p>
+                </div>
+                <div class="vision">
+                    <h3>Vision</h3>
+                    <p>To become a leading example of how digital businesses can thrive while maintaining a commitment to environmental responsibility.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Our Team</h2>
+            <div class="team-member">
+                <div class="team-img">JD</div>
+                <div class="team-info">
+                    <h3>Jane Doe</h3>
+                    <p>Founder & Creative Director</p>
+                    <p>Jane brings over 15 years of experience in web design and environmental advocacy. Her passion for combining technology with sustainability drives our company vision.</p>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="team-img">JS</div>
+                <div class="team-info">
+                    <h3>John Smith</h3>
+                    <p>Lead Developer</p>
+                    <p>John is our coding genius who ensures that all our websites are not only beautiful but also energy-efficient and optimized for minimal environmental impact.</p>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="team-img">ML</div>
+                <div class="team-info">
+                    <h3>Maria Lopez</h3>
+                    <p>Sustainability Officer</p>
+                    <p>Maria oversees our green initiatives and ensures that our business practices align with our environmental values. She helps our clients implement eco-friendly digital strategies.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Our Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2020</h3>
+                        <p>Green Website was founded with a mission to bring sustainable practices to web design.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2021</h3>
+                        <p>Expanded our services to include green hosting solutions and eco-friendly digital marketing.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2023</h3>
+                        <p>Launched our sustainability consultation services to help businesses reduce their digital carbon footprint.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2025</h3>
+                        <p>Celebrating five years of growth and impact in the sustainable web design industry.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Our Values</h2>
+            <ul>
+                <li><strong>Sustainability:</strong> We prioritize environmentally responsible practices in all aspects of our work.</li>
+                <li><strong>Innovation:</strong> We constantly explore new ways to reduce the environmental impact of digital products.</li>
+                <li><strong>Transparency:</strong> We believe in honest communication and sharing our knowledge with our community.</li>
+                <li><strong>Quality:</strong> We never compromise on delivering excellence in our designs and solutions.</li>
+            </ul>
+        </section>
+        
+        <section>
+            <h2>Get To Know Us Better</h2>
+            <p>Want to learn more about our green initiatives or how we can help your business become more environmentally conscious? We'd love to connect with you!</p>
+            <button class="green-button">Contact Our Team</button>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Green Website. All rights reserved.</p>
+    </footer>
+</body>
+</html>
