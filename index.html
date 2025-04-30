@@ -360,10 +360,10 @@
             <div class="pulse-circle"></div>
             
             <div class="nav-buttons">
-                <button class="nav-button interactive-element">Home</button>
-                <button class="nav-button interactive-element">About</button>
-                <button class="nav-button interactive-element">Partners</button>
-                <button class="nav-button interactive-element">Announcements</button>
+                <a href="/" class="nav-button interactive-element">Home</a>
+                <a href="/About" class="nav-button interactive-element">About</a>
+                <a href="/Partners" class="nav-button interactive-element">Partners</a>
+                <a href="/Announcements" class="nav-button interactive-element">Announcements</a>
             </div>
         </header>
         
@@ -376,18 +376,6 @@
                     <span class="icon">⚡</span>
                     <h3>Upcoming Events</h3>
                     <p>Check out our exciting lineup of upcoming workshops, meetups, and special sessions designed to inspire and energize.</p>
-                </div>
-                
-                <div class="feature-card interactive-element">
-                    <span class="icon">🌟</span>
-                    <h3>Member Spotlight</h3>
-                    <p>Celebrating achievements and sharing success stories from our amazing community members who embody the YLM spirit.</p>
-                </div>
-                
-                <div class="feature-card interactive-element">
-                    <span class="icon">🔄</span>
-                    <h3>Latest Updates</h3>
-                    <p>Stay current with all the latest news, developments, and opportunities within our vibrant and growing community.</p>
                 </div>
             </div>
             
@@ -414,17 +402,15 @@
     <script>
         // Add some extra interactivity
         document.querySelectorAll('.nav-button').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function(e) {
                 // Add a click effect
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = '';
                 }, 200);
                 
-                // For demo purposes - show which page was clicked
-                if (this.textContent !== 'Home') {
-                    alert('Navigating to ' + this.textContent + ' page');
-                }
+                // We're using real links now, so no need for the alert
+                // The actual navigation will happen naturally through the href attribute
             });
         });
         
