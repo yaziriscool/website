@@ -1,149 +1,345 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Game 64</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-const ElevatorGame64 = () => {
-  const [currentPage, setCurrentPage] = useState('home');
-  const [bubbles, setBubbles] = useState([]);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #6ee7b7, #2dd4bf, #14b8a6);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-  useEffect(() => {
-    // Generate random bubbles
-    const newBubbles = Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      size: Math.random() * 60 + 20,
-      duration: Math.random() * 10 + 15,
-      delay: Math.random() * 5
-    }));
-    setBubbles(newBubbles);
-  }, []);
-
-  const renderPage = () => {
-    switch(currentPage) {
-      case 'home':
-        return <HomePage />;
-      case 'games':
-        return <GamesPage />;
-      case 'about':
-        return <AboutPage />;
-      default:
-        return <HomePage />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-emerald-300 via-teal-400 to-teal-600">
-      {/* Animated Bubbles */}
-      {bubbles.map(bubble => (
-        <div
-          key={bubble.id}
-          className="absolute rounded-full bg-white opacity-10 animate-float"
-          style={{
-            left: `${bubble.left}%`,
-            width: `${bubble.size}px`,
-            height: `${bubble.size}px`,
-            animation: `float ${bubble.duration}s ease-in-out infinite`,
-            animationDelay: `${bubble.delay}s`,
-            bottom: '-100px'
-          }}
-        />
-      ))}
-
-      <style>{`
         @keyframes float {
-          0%, 100% {
-            transform: translateY(0) translateX(0) scale(1);
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.1;
-          }
-          50% {
-            transform: translateY(-100vh) translateX(20px) scale(1.05);
-            opacity: 0.15;
-          }
-          90% {
-            opacity: 0.1;
-          }
-          100% {
-            transform: translateY(-110vh) translateX(-10px) scale(0.95);
-            opacity: 0;
-          }
+            0%, 100% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.1;
+            }
+            50% {
+                transform: translateY(-100vh) translateX(20px) scale(1.05);
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(-10px) scale(0.95);
+                opacity: 0;
+            }
         }
-        @keyframes bounce {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.02);
-          }
-        }
-      `}</style>
-
-      {/* Navigation */}
-      <nav className="relative z-10 p-6">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 
-            className="text-4xl font-bold text-white drop-shadow-lg cursor-pointer"
-            style={{ 
-              textShadow: '3px 3px 0px rgba(0,0,0,0.3), 6px 6px 0px rgba(0,0,0,0.2)'
-            }}
-            onClick={() => setCurrentPage('home')}
-          >
-            Elevator Game 64
-          </h1>
-          <div className="flex gap-4">
-            {['home', 'games', 'about'].map(page => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`px-6 py-3 rounded-full font-bold text-lg transition-all duration-300 ${
-                  currentPage === page
-                    ? 'bg-white text-blue-600 shadow-lg scale-110'
-                    : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105'
-                }`}
-                style={{
-                  boxShadow: currentPage === page ? '0 8px 20px rgba(0,0,0,0.3)' : '0 4px 10px rgba(0,0,0,0.2)'
-                }}
-              >
-                {page.charAt(0).toUpperCase() + page.slice(1)}
-              </button>
-            ))}
-          </div>
-        </div>
-      </nav>
-
-      {/* Page Content */}
-      <div className="relative z-10">
-        {renderPage()}
-      </div>
-    </div>
-  );
-};
-
-const HomePage = () => {
-  return (
-    <div className="max-w-6xl mx-auto mt-20 p-8">
-      <div 
-        className="bg-white bg-opacity-90 rounded-3xl p-12 shadow-2xl"
-      >
-        <h2 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600 mb-6 text-center">
-          Beta
-        </h2>
-        <p className="text-xl text-gray-700 mb-8 text-center">
-          The Official Elevator Game 64 Website. I literally have nothing else to put on here lol.
-        </p>
         
-        <div className="mt-12 bg-gray-50 rounded-2xl p-8">
-          <h3 className="text-3xl font-bold text-gray-800 mb-4">We made it guys! Changelogs:</h3>
-          <pre className="text-sm text-gray-700 font-mono whitespace-pre-wrap overflow-x-auto">
-{`+ Added a few new floors as part of v0.3
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.1;
+            animation: float ease-in-out infinite;
+            bottom: -100px;
+        }
+
+        nav {
+            position: relative;
+            z-index: 10;
+            padding: 24px;
+        }
+
+        .nav-container {
+            max-width: 1152px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.3), 6px 6px 0px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: #2563eb;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:not(.active) {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1152px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .container-small {
+            max-width: 896px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin-top: 80px;
+        }
+
+        .title {
+            font-size: 60px;
+            font-weight: bold;
+            background: linear-gradient(to right, #10b981, #14b8a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(to right, #10b981, #14b8a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-xl {
+            font-size: 20px;
+            color: #374151;
+            margin-bottom: 32px;
+        }
+
+        .changelog-box {
+            margin-top: 48px;
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .changelog-title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .changelog-text {
+            font-size: 14px;
+            color: #374151;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .version {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-top: 24px;
+        }
+
+        .game-link {
+            display: block;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            transition: transform 0.3s;
+            max-width: 448px;
+            margin: 80px auto 48px auto;
+        }
+
+        .game-link:hover {
+            transform: scale(1.05);
+        }
+
+        .game-title {
+            font-size: 30px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .game-desc {
+            font-size: 18px;
+            color: #374151;
+            text-align: center;
+        }
+
+        .screenshot-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .screenshot-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .screenshot-img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-img {
+            width: 256px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin: 0 auto 32px auto;
+            display: block;
+        }
+
+        .about-text {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.75;
+            margin-bottom: 24px;
+        }
+
+        .highlight-green {
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        .highlight-teal {
+            font-weight: bold;
+            color: #14b8a6;
+        }
+
+        ul {
+            list-style: disc;
+            margin-left: 40px;
+            font-size: 18px;
+            color: #374151;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .title {
+                font-size: 40px;
+            }
+            
+            .subtitle {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Bubbles -->
+    <div id="bubbles-container"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <h1 class="logo" onclick="showPage('home')">Elevator Game 64</h1>
+            <div class="nav-buttons">
+                <button onclick="showPage('home')" id="btn-home" class="nav-btn active">Home</button>
+                <button onclick="showPage('games')" id="btn-games" class="nav-btn">Games</button>
+                <button onclick="showPage('about')" id="btn-about" class="nav-btn">About</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="content">
+        <!-- Home Page -->
+        <div id="page-home" class="page-content active">
+            <div class="container">
+                <div class="card">
+                    <h2 class="title">Beta</h2>
+                    <p class="text-xl text-center">
+                        The Official Elevator Game 64 Website. I literally have nothing else to put on here lol.
+                    </p>
+                    
+                    <div class="changelog-box">
+                        <h3 class="changelog-title">We made it guys! Changelogs:</h3>
+                        <pre class="changelog-text">+ Added a few new floors as part of v0.3
 ~ NPCs can now rotate to look at the player
 + Added the galaxy spin as an ability
 ~ Fixed some music related issues and improved scripts for the floor variants
@@ -152,98 +348,106 @@ const HomePage = () => {
 + Added a timer to appear on the screen for when the current floor has less than 30 seconds left
 ~ Finally fixed various star issues (there were 3 scripts for collecting ONE star)
 ~ Moved Beta and Green voice options to Utilities, next to the game chat.
-+ You want fun? Wario show you fun!`}
-          </pre>
-          <p className="text-lg font-bold text-blue-600 mt-6">current version: v0.3</p>
++ You want fun? Wario show you fun!</pre>
+                        <p class="version">current version: v0.3</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
-};
 
-const GamesPage = () => {
-  return (
-    <div className="max-w-6xl mx-auto mt-20 p-8">
-      <div className="flex justify-center mb-12">
-        <a
-          href="https://www.roblox.com/games/98572725528544/Elevator-Game-64-v0-3"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-white bg-opacity-90 rounded-3xl p-8 shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer w-full max-w-md"
-        >
-          <h3 className="text-3xl font-bold text-blue-600 mb-3 text-center">
-            Elevator Game 64
-          </h3>
-          <p className="text-lg text-gray-700 text-center">Elevator Game 64.</p>
-        </a>
-      </div>
-      
-      {/* Game Screenshots */}
-      <div className="bg-white bg-opacity-90 rounded-3xl p-8 shadow-2xl">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Game Screenshots</h3>
-        <div className="grid grid-cols-2 gap-6">
-          <img 
-            src="https://i.imgur.com/R2KyrQP.png" 
-            alt="EG64"
-            className="w-full rounded-lg shadow-lg"
-          />
-          <img 
-            src="https://i.imgur.com/ezt4s1T.png" 
-            alt="Luigi sleeping"
-            className="w-full rounded-lg shadow-lg"
-          />
-          <img 
-            src="https://i.imgur.com/vcgBbsc.png" 
-            alt="Painting"
-            className="w-full rounded-lg shadow-lg"
-          />
-          <img 
-            src="https://i.imgur.com/Ld1PfkC.png" 
-            alt="Painting 2"
-            className="w-full rounded-lg shadow-lg"
-          />
+        <!-- Games Page -->
+        <div id="page-games" class="page-content">
+            <div class="container">
+                <a href="https://www.roblox.com/games/98572725528544/Elevator-Game-64-v0-3" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="game-link">
+                    <img src="https://i.imgur.com/JK6xOSV.png" alt="Elevator Game 64 Thumbnail" style="width: 100%; border-radius: 12px; margin-bottom: 16px;">
+                    <h3 class="game-title">Elevator Game 64</h3>
+                    <p class="game-desc">Elevator Game 64.</p>
+                </a>
+                
+                <div class="screenshot-section">
+                    <h3 class="screenshot-title">Game Screenshots</h3>
+                    <div class="grid">
+                        <img src="https://i.imgur.com/R2KyrQP.png" alt="EG64" class="screenshot-img">
+                        <img src="https://i.imgur.com/ezt4s1T.png" alt="Luigi sleeping" class="screenshot-img">
+                        <img src="https://i.imgur.com/vcgBbsc.png" alt="Painting" class="screenshot-img">
+                        <img src="https://i.imgur.com/Ld1PfkC.png" alt="Painting 2" class="screenshot-img">
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
-};
 
-const AboutPage = () => {
-  return (
-    <div className="max-w-5xl mx-auto mt-20 p-8">
-      <div className="bg-white bg-opacity-90 rounded-3xl p-12 shadow-2xl">
-        <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600 mb-8 text-center">
-          About Elevator Game 64
-        </h2>
-        
-        {/* Featured image */}
-        <div className="flex justify-center mb-8">
-          <img 
-            src="https://i.imgur.com/PJhQ36z.png" 
-            alt="Game characters"
-            className="w-64 rounded-lg shadow-lg"
-          />
+        <!-- About Page -->
+        <div id="page-about" class="page-content">
+            <div class="container-small">
+                <div class="card">
+                    <h2 class="subtitle">About Elevator Game 64</h2>
+                    
+                    <img src="https://i.imgur.com/PJhQ36z.png" alt="Game characters" class="about-img">
+                    
+                    <p class="about-text">
+                        Elevator 64 is a game inspired by Super Mario 64 and The Elevator. This game started back in August by MarioYT21. Around September I started to get invested into SM64 Physics. Progress was slow, but overtime I started to learn more and more about how the engine works. To which then I made my own take on Elevator 64 (now called Elevator 120). Eventually around November is when I started to perfect the engine more and more. And that's when the game got called "<span class="highlight-green">Lobby</span> <span class="highlight-teal">120</span>" (now called Lobby 120). And both games remained seperate for quite awhile. Sure enough MarioYT's Elevator 64 started to get quite a bit more players then Elevator 120. And around summer of 2025. I saw 15 people playing the game and decided that this is the perfect time to upgrade the engine. And so I did, and sure enough the game starts to get popular. It was stuck around 20 players. But there was another game I made but was seperate called "Natural Disaster 64" and that game did VERY well. And actually brought a lot of players to Elevator 64. Sure enough, both games were doing well. Natural Disaster 64 had to be closed due to personal reasons. But Elevator Game 64 is more popular than ever now.
+                    </p>
+                    <p class="about-text">
+                        This game uses Beta, Vanilla, and Custom assets/Movesets.
+                    </p>
+                    <p class="about-text">
+                        Custom movesets include:
+                    </p>
+                    <ul>
+                        <li>Odyssey dive</li>
+                        <li>Galaxy spin</li>
+                        <li>Long jump ground pound</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        
-        <div className="space-y-6 text-lg text-gray-700">
-          <p>
-            Elevator 64 is a game inspired by Super Mario 64 and The Elevator. This game started back in August by MarioYT21. Around September I started to get invested into SM64 Physics. Progress was slow, but overtime I started to learn more and more about how the engine works. To which then I made my own take on Elevator 64 (now called Elevator 120). Eventually around November is when I started to perfect the engine more and more. And that's when the game got called "<span className="font-bold text-emerald-500">Lobby</span> <span className="font-bold text-teal-600">120</span>" (now called Lobby 120). And both games remained seperate for quite awhile. Sure enough MarioYT's Elevator 64 started to get quite a bit more players then Elevator 120. And around summer of 2025. I saw 15 people playing the game and decided that this is the perfect time to upgrade the engine. And so I did, and sure enough the game starts to get popular. It was stuck around 20 players. But there was another game I made but was seperate called "Natural Disaster 64" and that game did VERY well. And actually brought a lot of players to Elevator 64. Sure enough, both games were doing well. Natural Disaster 64 had to be closed due to personal reasons. But Elevator Game 64 is more popular than ever now.
-          </p>
-          <p>
-            This game uses Beta, Vanilla, and Custom assets/Movesets.
-          </p>
-          <p>
-            Custom movesets include:
-          </p>
-          <ul className="list-disc list-inside ml-4">
-            <li>Odyssey dive</li>
-            <li>Galaxy spin</li>
-            <li>Long jump ground pound</li>
-          </ul>
-        </div>
-      </div>
     </div>
-  );
-};
 
-export default ElevatorGame64;
+    <script>
+        // Generate bubbles
+        function generateBubbles() {
+            const container = document.getElementById('bubbles-container');
+            for (let i = 0; i < 10; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 60 + 20;
+                const left = Math.random() * 100;
+                const duration = Math.random() * 10 + 15;
+                const delay = Math.random() * 5;
+                
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = left + '%';
+                bubble.style.animationDuration = duration + 's';
+                bubble.style.animationDelay = delay + 's';
+                
+                container.appendChild(bubble);
+            }
+        }
+
+        // Page navigation
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById('page-' + pageName).classList.add('active');
+            
+            // Update button styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById('btn-' + pageName).classList.add('active');
+        }
+
+        // Initialize
+        generateBubbles();
+    </script>
+</body>
+</html>
