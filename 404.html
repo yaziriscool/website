@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: #000;
+      font-family: 'Cormorant Garamond', serif;
+      color: #fff;
+      cursor: none;
+    }
+
+    /* ---- deep void background ---- */
+    .bg {
+      position: fixed; inset: 0; z-index: 0;
+    }
+
+    .bg-base {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, #0a0005 0%, #000 70%);
+    }
+
+    /* slow pulsing red bleed */
+    .bg-bleed {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 40% 35% at 50% 55%, rgba(80,0,0,0.55) 0%, transparent 70%);
+      animation: bleedPulse 6s ease-in-out infinite;
+    }
+    @keyframes bleedPulse {
+      0%,100% { opacity: 0.6; transform: scale(1); }
+      50%      { opacity: 1;   transform: scale(1.08); }
+    }
+
+    /* vignette */
+    .vignette {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.95) 100%);
+    }
+
+    /* scanline overlay */
+    .scanlines {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.18) 2px,
+        rgba(0,0,0,0.18) 4px
+      );
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* noise grain */
+    .grain {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+      opacity: 0.07;
+      pointer-events: none;
+      animation: grainShift 0.12s steps(1) infinite;
+    }
+    @keyframes grainShift {
+      0%  { background-position: 0 0; }
+      25% { background-position: -30px 20px; }
+      50% { background-position: 15px -25px; }
+      75% { background-position: -10px 30px; }
+    }
+
+    /* ---- image ---- */
+    .shame-img {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: clamp(260px, 52vh, 460px);
+      z-index: 20;
+      filter:
+        grayscale(0.3)
+        contrast(1.3)
+        brightness(0.7)
+        drop-shadow(0 0 40px rgba(180,0,0,0.7))
+        drop-shadow(0 0 80px rgba(100,0,0,0.5));
+      animation: imgBreath 7s ease-in-out infinite, imgGlitch 14s steps(1) infinite;
+      image-rendering: pixelated;
+      pointer-events: none;
+    }
+
+    @keyframes imgBreath {
+      0%,100% { transform: translateX(-50%) scale(1)   translateY(0); }
+      50%      { transform: translateX(-50%) scale(1.03) translateY(-6px); }
+    }
+
+    @keyframes imgGlitch {
+      0%,89%,91%,94%,96%,100% { filter: grayscale(0.3) contrast(1.3) brightness(0.7) drop-shadow(0 0 40px rgba(180,0,0,0.7)) drop-shadow(0 0 80px rgba(100,0,0,0.5)); clip-path: none; }
+      90%  { filter: grayscale(0) contrast(2) brightness(0.5) hue-rotate(180deg) drop-shadow(0 0 60px rgba(255,0,0,0.9)); clip-path: inset(10% 0 60% 0); transform: translateX(calc(-50% + 8px)) scale(1); }
+      93%  { filter: grayscale(0) contrast(2.2) brightness(0.4) hue-rotate(0deg)   drop-shadow(0 0 60px rgba(255,0,0,0.9)); clip-path: inset(55% 0 5% 0);  transform: translateX(calc(-50% - 6px)) scale(1); }
+      95%  { filter: grayscale(0.5) contrast(1.6) brightness(0.6) drop-shadow(0 0 50px rgba(200,0,0,0.8)); clip-path: none; transform: translateX(-50%) scale(1); }
+    }
+
+    /* ---- 404 text ---- */
+    .content {
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: clamp(3rem, 10vh, 7rem);
+      pointer-events: none;
+    }
+
+    .four-o-four {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 200;
+      font-size: clamp(6rem, 18vw, 14rem);
+      letter-spacing: 0.08em;
+      line-height: 1;
+      color: #fff;
+      opacity: 0.06;
+      animation: numFlicker 9s steps(1) infinite;
+      user-select: none;
+    }
+    @keyframes numFlicker {
+      0%,88%,90%,93%,100% { opacity: 0.06; }
+      89%  { opacity: 0.12; }
+      91%  { opacity: 0.03; }
+      92%  { opacity: 0.09; }
+    }
+
+    .sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(0.8rem, 2vw, 1.1rem);
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.18);
+      margin-top: 0.6rem;
+      animation: subFlicker 11s ease-in-out infinite;
+    }
+    @keyframes subFlicker {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.5; }
+      72%      { opacity: 0.15; }
+      73%      { opacity: 0.8; }
+      74%      { opacity: 0.2; }
+      75%      { opacity: 1; }
+    }
+
+    /* ---- SHAME bottom left ---- */
+    .shame {
+      position: fixed;
+      bottom: 2.2rem;
+      left: 2.4rem;
+      z-index: 30;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      letter-spacing: 0.06em;
+      background: linear-gradient(140deg, #ff2200 0%, #8b0000 50%, #3a0000 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 16px rgba(200,0,0,0.7));
+      animation: shameFlicker 8s steps(1) infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+    @keyframes shameFlicker {
+      0%,82%,84%,87%,100% { opacity: 1; filter: drop-shadow(0 0 16px rgba(200,0,0,0.7)); }
+      83%  { opacity: 0.3; filter: drop-shadow(0 0 4px rgba(200,0,0,0.3)); }
+      85%  { opacity: 0.8; filter: drop-shadow(0 0 30px rgba(255,0,0,1)); }
+      86%  { opacity: 0.1; filter: none; }
+    }
+
+    /* ---- back link ---- */
+    .back-link {
+      position: fixed;
+      top: 2rem;
+      left: 2.4rem;
+      z-index: 30;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.14);
+      text-decoration: none;
+      transition: color 0.4s;
+      cursor: pointer;
+    }
+    .back-link:hover { color: rgba(200,0,0,0.7); }
+
+    /* ---- custom cursor ---- */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(180,0,0,0.8);
+      pointer-events: none;
+      z-index: 999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.05s linear;
+      box-shadow: 0 0 12px rgba(200,0,0,0.9);
+    }
+
+    /* ---- random blood drips ---- */
+    .drip {
+      position: fixed;
+      top: 0;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(140,0,0,0.85) 0%, rgba(80,0,0,0) 100%);
+      border-radius: 0 0 4px 4px;
+      animation: drip linear forwards;
+      z-index: 4;
+    }
+    @keyframes drip {
+      from { height: 0; opacity: 0.7; }
+      to   { height: var(--drip-h); opacity: 0; }
+    }
+
+    /* ---- horizontal glitch bar ---- */
+    .glitch-bar {
+      position: fixed;
+      left: 0; right: 0;
+      height: 3px;
+      background: rgba(200,0,0,0.6);
+      z-index: 25;
+      pointer-events: none;
+      opacity: 0;
+      animation: glitchBar 13s steps(1) infinite;
+    }
+    @keyframes glitchBar {
+      0%,91%,93%,100% { opacity:0; top:50%; }
+      92%  { opacity:1; top:30%; }
+      92.3%{ opacity:0.5; top:65%; }
+      92.6%{ opacity:1; top:20%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <div class="bg">
+    <div class="bg-base"></div>
+    <div class="bg-bleed"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <div class="grain"></div>
+  </div>
+
+  <div class="glitch-bar"></div>
+
+  <div class="content">
+    <p class="four-o-four">404</p>
+    <p class="sub">this page does not exist</p>
+  </div>
+
+  <img
+    class="shame-img"
+    src="https://static.wikia.nocookie.net/b3313/images/a/a1/Shame2.png/revision/latest/scale-to-width-down/250?cb=20240205233314"
+    alt=""
+  />
+
+  <p class="shame">Shame...</p>
+
+  <a href="/" class="back-link">← return</a>
+
+  <script>
+    // custom cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+
+    // random blood drips from top
+    function spawnDrip() {
+      const d = document.createElement('div');
+      d.className = 'drip';
+      const h = 40 + Math.random() * 180;
+      d.style.cssText = `
+        left: ${Math.random()*100}%;
+        --drip-h: ${h}px;
+        width: ${1 + Math.random()*2.5}px;
+        animation-duration: ${2.5 + Math.random()*4}s;
+        animation-delay: ${Math.random()*2}s;
+      `;
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 7000);
+    }
+    setInterval(spawnDrip, 800);
+    for (let i = 0; i < 6; i++) spawnDrip();
+
+    // occasional screen shake
+    function shake() {
+      document.body.style.transform = `translate(${(Math.random()-0.5)*6}px, ${(Math.random()-0.5)*4}px)`;
+      setTimeout(() => { document.body.style.transform = ''; }, 80);
+    }
+    setInterval(() => { if (Math.random() < 0.3) shake(); }, 4000);
+  </script>
+
+</body>
+</html>
