@@ -1,456 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elevator Game 64</title>
-    <meta name="description" content="The Official Elevator Game 64 Website - A game inspired by Super Mario 64 and The Elevator.">
-    <link rel="icon" type="image/png" href="https://i.imgur.com/nBErMIA.png">
-    <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/nBErMIA.png">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elevator Game 64</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400&family=Cormorant+Garamond:ital,wght@1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(to bottom right, #047857, #0f766e, #115e59);
-            overflow-x: hidden;
-            position: relative;
-        }
+    :root {
+      --lavender:    #d4b8f0;
+      --darkest:     #160928;
+    }
 
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) translateX(0) scale(1);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.1;
-            }
-            50% {
-                transform: translateY(-100vh) translateX(20px) scale(1.05);
-                opacity: 0.15;
-            }
-            90% {
-                opacity: 0.1;
-            }
-            100% {
-                transform: translateY(-110vh) translateX(-10px) scale(0.95);
-                opacity: 0;
-            }
-        }
-        
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: white;
-            opacity: 0.1;
-            animation: float ease-in-out infinite;
-            bottom: -100px;
-        }
+    html, body { width: 100%; height: 100%; }
 
-        nav {
-            position: relative;
-            z-index: 10;
-            padding: 24px;
-        }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--darkest);
+      color: var(--lavender);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
 
-        .nav-container {
-            max-width: 1152px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .bg { position: fixed; inset: 0; z-index: 0; }
 
-        .logo {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.3), 6px 6px 0px rgba(0,0,0,0.2);
-            cursor: pointer;
-        }
+    .bg-gradient {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 75% 55% at 15% 8%,  rgba(130,55,200,0.42) 0%, transparent 68%),
+        radial-gradient(ellipse 55% 50% at 85% 85%, rgba(75,25,135,0.48)  0%, transparent 65%),
+        radial-gradient(ellipse 90% 70% at 50% 50%, rgba(22,9,40,1)       0%, transparent 100%);
+    }
 
-        .nav-buttons {
-            display: flex;
-            gap: 16px;
-        }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(65px);
+      animation: drift linear infinite;
+    }
+    .orb-1 { width:500px; height:500px; background:rgba(110,45,185,0.32);  top:-12%; left:-10%; animation-duration:30s; }
+    .orb-2 { width:320px; height:320px; background:rgba(65,18,120,0.38);   top:58%;  left:72%;  animation-duration:23s; animation-delay:-9s; }
+    .orb-3 { width:260px; height:260px; background:rgba(165,80,230,0.22);  top:28%;  left:48%;  animation-duration:36s; animation-delay:-17s; }
+    .orb-4 { width:200px; height:200px; background:rgba(200,120,255,0.15); top:78%;  left:8%;   animation-duration:20s; animation-delay:-6s; }
 
-        .nav-btn {
-            padding: 12px 24px;
-            border-radius: 9999px;
-            font-weight: bold;
-            font-size: 18px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+    @keyframes drift {
+      0%   { transform: translate(0,0) scale(1); }
+      33%  { transform: translate(28px,-38px) scale(1.07); }
+      66%  { transform: translate(-18px,22px) scale(0.96); }
+      100% { transform: translate(0,0) scale(1); }
+    }
 
-        .nav-btn:hover {
-            transform: scale(1.05);
-        }
+    .grain {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.04;
+      pointer-events: none;
+    }
 
-        .nav-btn.active {
-            background: #e5e7eb;
-            color: #1e3a8a;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            transform: scale(1.1);
-        }
+    .particles { position: absolute; inset: 0; pointer-events: none; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(210,175,245,0.55);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(105vh) translateX(0);   opacity: 0; }
+      8%   { opacity: 1; }
+      92%  { opacity: 0.5; }
+      100% { transform: translateY(-8vh) translateX(15px); opacity: 0; }
+    }
 
-        .nav-btn:not(.active) {
-            background: #1e40af;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+    /* stage */
+    .stage {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      animation: fadeIn 2.4s ease 0.1s forwards;
+    }
 
-        .content {
-            position: relative;
-            z-index: 10;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-        .page-content {
-            display: none;
-        }
+    .logo-img {
+      width: clamp(88px, 15vw, 128px);
+      margin-bottom: 1.8rem;
+      border-radius: 18px;
+      filter: drop-shadow(0 0 22px rgba(180,100,255,0.55));
+      animation: bobble 5s ease-in-out infinite;
+    }
 
-        .page-content.active {
-            display: block;
-        }
+    @keyframes bobble {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-7px); }
+    }
 
-        .container {
-            max-width: 1152px;
-            margin: 0 auto;
-            padding: 32px;
-        }
+    .eyebrow {
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(210,175,245,0.36);
+      margin-bottom: 0.9rem;
+    }
 
-        .container-small {
-            max-width: 896px;
-            margin: 0 auto;
-            padding: 32px;
-        }
+    .title {
+      font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+      font-weight: 200;
+      letter-spacing: 0.2em;
+      line-height: 1.2;
+      background: linear-gradient(140deg, #f0dcff 0%, #c090ef 35%, #8a4fc8 70%, #d4b8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
 
-        .card {
-            background: rgba(31, 41, 55, 0.9);
-            border-radius: 24px;
-            padding: 48px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-            margin-top: 80px;
-        }
+    .dev-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: rgba(200,155,240,0.42);
+      letter-spacing: 0.1em;
+      margin-bottom: 3.4rem;
+    }
 
-        .title {
-            font-size: 60px;
-            font-weight: bold;
-            background: linear-gradient(to right, #34d399, #2dd4bf);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 24px;
-            text-align: center;
-        }
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      width: 100%;
+      max-width: 295px;
+    }
 
-        .subtitle {
-            font-size: 48px;
-            font-weight: bold;
-            background: linear-gradient(to right, #34d399, #2dd4bf);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 32px;
-            text-align: center;
-        }
+    .btn {
+      position: relative;
+      display: block;
+      width: 100%;
+      padding: 0.95rem 2rem;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.38s ease;
+    }
 
-        .text-center {
-            text-align: center;
-        }
+    .btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.16) 50%, transparent 70%);
+      transform: translateX(-110%);
+      transition: transform 0.6s ease;
+      border-radius: inherit;
+    }
+    .btn:hover::before { transform: translateX(110%); }
 
-        .text-xl {
-            font-size: 20px;
-            color: #d1d5db;
-            margin-bottom: 32px;
-        }
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 99px;
+      border: 1px solid rgba(255,255,255,0.13);
+      pointer-events: none;
+    }
 
-        .changelog-box {
-            margin-top: 48px;
-            background: #1f2937;
-            border-radius: 16px;
-            padding: 32px;
-        }
+    .btn-primary {
+      background: linear-gradient(135deg, #a066d8 0%, #6b30a2 50%, #45197a 100%);
+      color: #eedcff;
+      box-shadow: 0 0 22px rgba(140,65,210,0.4), 0 5px 22px rgba(50,8,90,0.55), inset 0 1px 0 rgba(255,255,255,0.13);
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.022);
+      box-shadow: 0 0 38px rgba(160,85,230,0.6), 0 10px 32px rgba(50,8,90,0.65), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
 
-        .changelog-title {
-            font-size: 30px;
-            font-weight: bold;
-            color: #f3f4f6;
-            margin-bottom: 16px;
-        }
+    .btn-secondary {
+      background: linear-gradient(135deg, #5a2880 0%, #391060 50%, #220944 100%);
+      color: #c8a9e8;
+      box-shadow: 0 0 16px rgba(90,35,140,0.32), 0 4px 16px rgba(25,5,55,0.5), inset 0 1px 0 rgba(255,255,255,0.09);
+    }
+    .btn-secondary:hover {
+      transform: translateY(-3px) scale(1.022);
+      box-shadow: 0 0 28px rgba(110,55,175,0.48), 0 8px 24px rgba(25,5,55,0.6), inset 0 1px 0 rgba(255,255,255,0.13);
+    }
 
-        .changelog-text {
-            font-size: 14px;
-            color: #d1d5db;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
+    .btn:active { transform: translateY(0) scale(0.97); }
 
-        .version {
-            font-size: 18px;
-            font-weight: bold;
-            color: #3b82f6;
-            margin-top: 24px;
-        }
+    .rule {
+      width: 50px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(210,175,245,0.32), transparent);
+      margin: 3rem auto 0;
+    }
 
-        .game-link {
-            display: block;
-            background: rgba(31, 41, 55, 0.9);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            text-decoration: none;
-            transition: transform 0.3s;
-            max-width: 448px;
-            margin: 80px auto 48px auto;
-        }
-
-        .game-link:hover {
-            transform: scale(1.05);
-        }
-
-        .game-title {
-            font-size: 30px;
-            font-weight: bold;
-            color: #3b82f6;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-
-        .game-desc {
-            font-size: 18px;
-            color: #d1d5db;
-            text-align: center;
-        }
-
-        .screenshot-section {
-            background: rgba(31, 41, 55, 0.9);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        .screenshot-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #f3f4f6;
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-        }
-
-        .screenshot-img {
-            width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .about-img {
-            width: 256px;
-            border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            margin: 0 auto 32px auto;
-            display: block;
-        }
-
-        .about-text {
-            font-size: 18px;
-            color: #d1d5db;
-            line-height: 1.75;
-            margin-bottom: 24px;
-        }
-
-        .highlight-green {
-            font-weight: bold;
-            color: #34d399;
-        }
-
-        .highlight-teal {
-            font-weight: bold;
-            color: #2dd4bf;
-        }
-
-        ul {
-            list-style: disc;
-            margin-left: 40px;
-            font-size: 18px;
-            color: #d1d5db;
-        }
-
-        ul li {
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-container {
-                flex-direction: column;
-                gap: 16px;
-            }
-            
-            .title {
-                font-size: 40px;
-            }
-            
-            .subtitle {
-                font-size: 32px;
-            }
-        }
-    </style>
+    .footer-note {
+      margin-top: 1.1rem;
+      font-size: 0.67rem;
+      font-style: italic;
+      color: rgba(210,175,245,0.18);
+      letter-spacing: 0.1em;
+    }
+  </style>
 </head>
 <body>
-    <!-- Animated Bubbles -->
-    <div id="bubbles-container"></div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <h1 class="logo" onclick="showPage('home')">Elevator Game 64</h1>
-            <div class="nav-buttons">
-                <button onclick="showPage('home')" id="btn-home" class="nav-btn active">Home</button>
-                <button onclick="showPage('games')" id="btn-games" class="nav-btn">Games</button>
-                <button onclick="showPage('about')" id="btn-about" class="nav-btn">About</button>
-            </div>
-        </div>
-    </nav>
+  <div class="bg">
+    <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="grain"></div>
+    <div class="particles" id="particles"></div>
+  </div>
 
-    <!-- Page Content -->
-    <div class="content">
-        <!-- Home Page -->
-        <div id="page-home" class="page-content active">
-            <div class="container">
-                <div class="card">
-                    <h2 class="title">Beta</h2>
-                    <p class="text-xl text-center">
-                        The Official Elevator Game 64 Website. I literally have nothing else to put on here lol.
-                    </p>
-                    
-                    <div class="changelog-box">
-                        <h3 class="changelog-title">We made it guys! Changelogs:</h3>
-                        <pre class="changelog-text">+ Added a few new floors as part of v0.3
-~ NPCs can now rotate to look at the player
-+ Added the galaxy spin as an ability
-~ Fixed some music related issues and improved scripts for the floor variants
-~ Pipes should now work correctly with the new scripts
-~ Slightly changed a few floors to be more interesting
-+ Added a timer to appear on the screen for when the current floor has less than 30 seconds left
-~ Finally fixed various star issues (there were 3 scripts for collecting ONE star)
-~ Moved Beta and Green voice options to Utilities, next to the game chat.
-+ You want fun? Wario show you fun!</pre>
-                        <p class="version">current version: v0.3</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="stage">
+    <img class="logo-img" src="https://i.imgur.com/PJhQ36z.png" alt="Elevator Game 64" />
+    <p class="eyebrow">Welcome</p>
+    <h1 class="title">Elevator Game 64</h1>
+    <p class="dev-tag">0.4 is in development</p>
 
-        <!-- Games Page -->
-        <div id="page-games" class="page-content">
-            <div class="container">
-                <a href="https://www.roblox.com/games/98572725528544/Elevator-Game-64-v0-3" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   class="game-link">
-                    <img src="https://i.imgur.com/JK6xOSV.png" alt="Elevator Game 64 Thumbnail" style="width: 100%; border-radius: 12px; margin-bottom: 16px;">
-                    <h3 class="game-title">Elevator Game 64</h3>
-                    <p class="game-desc">Elevator Game 64.</p>
-                </a>
-                
-                <div class="screenshot-section">
-                    <h3 class="screenshot-title">Game Screenshots</h3>
-                    <div class="grid">
-                        <img src="https://i.imgur.com/R2KyrQP.png" alt="EG64" class="screenshot-img">
-                        <img src="https://i.imgur.com/ezt4s1T.png" alt="Luigi sleeping" class="screenshot-img">
-                        <img src="https://i.imgur.com/vcgBbsc.png" alt="Painting" class="screenshot-img">
-                        <img src="https://i.imgur.com/Ld1PfkC.png" alt="Painting 2" class="screenshot-img">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- About Page -->
-        <div id="page-about" class="page-content">
-            <div class="container-small">
-                <div class="card">
-                    <h2 class="subtitle">About Elevator Game 64</h2>
-                    
-                    <img src="https://i.imgur.com/PJhQ36z.png" alt="Game characters" class="about-img">
-                    
-                    <p class="about-text">
-                        Elevator 64 is a game inspired by Super Mario 64 and The Elevator. This game started back in August by MarioYT21. Around September I started to get invested into SM64 Physics. Progress was slow, but overtime I started to learn more and more about how the engine works. To which then I made my own take on Elevator 64 (now called Elevator 120). Eventually around November is when I started to perfect the engine more and more. And that's when the game got called "<span class="highlight-green">Lobby</span> <span class="highlight-teal">120</span>" (now called Lobby 120). And both games remained seperate for quite awhile. Sure enough MarioYT's Elevator 64 started to get quite a bit more players then Elevator 120. And around summer of 2025. I saw 15 people playing the game and decided that this is the perfect time to upgrade the engine. And so I did, and sure enough the game starts to get popular. It was stuck around 20 players. But there was another game I made but was seperate called "Natural Disaster 64" and that game did VERY well. And actually brought a lot of players to Elevator 64. Sure enough, both games were doing well. Natural Disaster 64 had to be closed due to personal reasons. But Elevator Game 64 is more popular than ever now.
-                    </p>
-                    <p class="about-text">
-                        This game uses Beta, Vanilla, and Custom assets/Movesets.
-                    </p>
-                    <p class="about-text">
-                        Custom movesets include:
-                    </p>
-                    <ul>
-                        <li>Odyssey dive</li>
-                        <li>Galaxy spin</li>
-                        <li>Long jump ground pound</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <div class="btn-group">
+      <a href="https://ele64.com/eg64" class="btn btn-primary">Elevator Game 64</a>
+      <a href="https://ele64.com/l120" class="btn btn-secondary">Lobby 120</a>
     </div>
 
-    <script>
-        // Generate bubbles
-        function generateBubbles() {
-            const container = document.getElementById('bubbles-container');
-            for (let i = 0; i < 10; i++) {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                const size = Math.random() * 60 + 20;
-                const left = Math.random() * 100;
-                const duration = Math.random() * 10 + 15;
-                const delay = Math.random() * 5;
-                
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.left = left + '%';
-                bubble.style.animationDuration = duration + 's';
-                bubble.style.animationDelay = delay + 's';
-                
-                container.appendChild(bubble);
-            }
-        }
+    <div class="rule"></div>
+    <p class="footer-note">something is coming</p>
+  </div>
 
-        // Page navigation
-        function showPage(pageName) {
-            // Hide all pages
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show selected page
-            document.getElementById('page-' + pageName).classList.add('active');
-            
-            // Update button styles
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById('btn-' + pageName).classList.add('active');
-        }
-
-        // Initialize
-        generateBubbles();
-    </script>
+  <script>
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 42; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 2.8 + 0.8;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        animation-duration:${13 + Math.random()*22}s;
+        animation-delay:${-Math.random()*28}s;
+      `;
+      container.appendChild(p);
+    }
+  </script>
 </body>
 </html>
