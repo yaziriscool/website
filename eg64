@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elevator Game 64</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --lavender: #d4b8f0;
+      --darkest:  #160928;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--darkest);
+      color: var(--lavender);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ---- background (fixed, same vibe as main) ---- */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-gradient {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 10% 5%,  rgba(130,55,200,0.38) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 45% at 90% 90%, rgba(75,25,135,0.44)  0%, transparent 62%),
+        radial-gradient(ellipse 100% 80% at 50% 50%,rgba(22,9,40,1)       0%, transparent 100%);
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(70px);
+      animation: drift linear infinite;
+    }
+    .orb-1 { width:520px; height:520px; background:rgba(110,45,185,0.28);  top:-14%; left:-12%; animation-duration:32s; }
+    .orb-2 { width:300px; height:300px; background:rgba(65,18,120,0.34);   top:60%;  left:74%;  animation-duration:25s; animation-delay:-10s; }
+    .orb-3 { width:240px; height:240px; background:rgba(165,80,230,0.2);   top:30%;  left:55%;  animation-duration:38s; animation-delay:-18s; }
+    @keyframes drift {
+      0%   { transform:translate(0,0) scale(1); }
+      33%  { transform:translate(24px,-34px) scale(1.06); }
+      66%  { transform:translate(-16px,20px) scale(0.96); }
+      100% { transform:translate(0,0) scale(1); }
+    }
+    .grain {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+      opacity: 0.04;
+    }
+    .particles { position: absolute; inset: 0; pointer-events: none; }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: rgba(210,175,245,0.5);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform:translateY(105vh) translateX(0);   opacity:0; }
+      8%   { opacity:1; }
+      92%  { opacity:0.4; }
+      100% { transform:translateY(-8vh) translateX(12px); opacity:0; }
+    }
+
+    /* ---- page scroll wrapper ---- */
+    .page {
+      position: relative;
+      z-index: 10;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    /* ---- back link ---- */
+    .back {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(210,175,245,0.35);
+      text-decoration: none;
+      margin-bottom: 3rem;
+      transition: color 0.3s;
+      opacity: 0;
+      animation: fadeUp 1.2s ease 0.1s forwards;
+    }
+    .back:hover { color: rgba(210,175,245,0.7); }
+
+    /* ---- hero title ---- */
+    .hero-title {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 200;
+      letter-spacing: 0.16em;
+      line-height: 1.15;
+      background: linear-gradient(140deg, #f0dcff 0%, #c090ef 35%, #8a4fc8 70%, #d4b8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2.6rem;
+      opacity: 0;
+      animation: fadeUp 1.2s ease 0.25s forwards;
+    }
+
+    /* ---- main image ---- */
+    .main-image-wrap {
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1.4s ease 0.4s forwards;
+      box-shadow:
+        0 0 50px rgba(140,55,220,0.3),
+        0 20px 60px rgba(10,2,25,0.7);
+    }
+    .main-image-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 20px;
+      border: 1px solid rgba(210,175,245,0.12);
+      pointer-events: none;
+    }
+    .main-image-wrap img {
+      width: 100%;
+      display: block;
+      border-radius: 20px;
+    }
+
+    /* ---- description ---- */
+    .description {
+      font-size: clamp(0.92rem, 2vw, 1.05rem);
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(212, 184, 240, 0.78);
+      letter-spacing: 0.02em;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1.4s ease 0.55s forwards;
+    }
+    .description .highlight {
+      background: linear-gradient(120deg, #e8ccff 0%, #b07de0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 400;
+    }
+
+    /* ---- play button ---- */
+    .play-wrap {
+      margin-bottom: 4.5rem;
+      opacity: 0;
+      animation: fadeUp 1.4s ease 0.7s forwards;
+    }
+    .btn-play {
+      display: inline-block;
+      padding: 1rem 2.8rem;
+      border-radius: 100px;
+      background: linear-gradient(135deg, #a066d8 0%, #6b30a2 50%, #45197a 100%);
+      color: #eedcff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 26px rgba(140,65,210,0.45), 0 6px 24px rgba(50,8,90,0.6), inset 0 1px 0 rgba(255,255,255,0.13);
+      transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.38s ease;
+    }
+    .btn-play::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.16) 50%, transparent 70%);
+      transform: translateX(-110%);
+      transition: transform 0.6s ease;
+    }
+    .btn-play:hover::before { transform: translateX(110%); }
+    .btn-play::after {
+      content: '';
+      position: absolute; inset:1px;
+      border-radius: 99px;
+      border: 1px solid rgba(255,255,255,0.13);
+      pointer-events: none;
+    }
+    .btn-play:hover {
+      transform: translateY(-3px) scale(1.022);
+      box-shadow: 0 0 42px rgba(160,85,230,0.65), 0 10px 34px rgba(50,8,90,0.7), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .btn-play:active { transform: scale(0.97); }
+
+    /* ---- divider ---- */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(210,175,245,0.2), transparent);
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 1.4s ease 0.8s forwards;
+    }
+
+    /* ---- screenshots label ---- */
+    .section-label {
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(210,175,245,0.32);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      animation: fadeUp 1.4s ease 0.88s forwards;
+    }
+
+    /* ---- side images grid ---- */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 1.6s ease 1s forwards;
+    }
+    @media (max-width: 580px) {
+      .gallery { grid-template-columns: 1fr; }
+    }
+
+    .gallery-item {
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease;
+      box-shadow: 0 0 20px rgba(100,40,180,0.22), 0 8px 30px rgba(10,2,25,0.55);
+    }
+    .gallery-item::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 14px;
+      border: 1px solid rgba(210,175,245,0.1);
+      pointer-events: none;
+      transition: border-color 0.3s;
+    }
+    .gallery-item:hover {
+      transform: translateY(-5px) scale(1.025);
+      box-shadow: 0 0 36px rgba(140,65,220,0.38), 0 16px 40px rgba(10,2,25,0.7);
+    }
+    .gallery-item:hover::after {
+      border-color: rgba(210,175,245,0.25);
+    }
+    .gallery-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border-radius: 14px;
+    }
+
+    /* ---- footer ---- */
+    .footer {
+      margin-top: 5rem;
+      text-align: center;
+    }
+    .footer-rule {
+      width: 50px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(210,175,245,0.28), transparent);
+      margin: 0 auto 1.2rem;
+    }
+    .footer-note {
+      font-size: 0.67rem;
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      color: rgba(210,175,245,0.18);
+      letter-spacing: 0.1em;
+    }
+
+    /* ---- animation ---- */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ---- lightbox ---- */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(12,4,24,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(8px);
+      cursor: zoom-out;
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
+      border-radius: 16px;
+      box-shadow: 0 0 80px rgba(140,55,220,0.4), 0 30px 80px rgba(0,0,0,0.8);
+      transform: scale(0.92);
+      transition: transform 0.35s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    .lightbox.open img { transform: scale(1); }
+  </style>
+</head>
+<body>
+
+  <div class="bg">
+    <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grain"></div>
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <div class="page">
+
+    <a href="/" class="back">← back</a>
+
+    <h1 class="hero-title">Elevator Game 64</h1>
+
+    <div class="main-image-wrap">
+      <img
+        src="https://cdn.discordapp.com/attachments/1464787085520142356/1464787086296092743/Untitled112_20260124200019.png?ex=69b16787&is=69b01607&hm=55e996cb4aa4d42303b1e2feb290538ce9f44e0512bbae4e9de5303b6a884241&"
+        alt="Elevator Game 64 main artwork"
+      />
+    </div>
+
+    <p class="description">
+      <span class="highlight">Elevator Game 64</span> is a fangame on Roblox based on Super Mario 64.
+      It takes many inspirations from the Super Mario 64 rom hack, B3313.
+      It is a combination of B3313, The Normal Elevator, vanilla Super Mario 64, and original stuff.
+      The game has lots of areas to explore, from vanilla Super Mario 64 to original content
+      created by the developers and contributors.
+    </p>
+
+    <div class="play-wrap">
+      <a href="https://www.roblox.com/games/98572725528544/Elevator-Game-64-v0-3-9" target="_blank" class="btn-play">
+        Play on Roblox
+      </a>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="section-label">Screenshots</p>
+
+    <div class="gallery">
+      <div class="gallery-item" onclick="openLightbox(this)">
+        <img src="https://media.discordapp.net/attachments/1464904601886261404/1464904602351570975/1133_sin_titulo_20260125024629.png?ex=69b12c39&is=69afdab9&hm=5f82b44dd4828a8b7e56e4fd5f909c1abab56987aeb857a1ba01ae8145ac27ee&=&format=webp&quality=lossless&width=755&height=755" alt="Screenshot 1" />
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this)">
+        <img src="https://cdn.discordapp.com/attachments/1464778662011207731/1464778662413865041/Untitled21_20260124172239.png?ex=69b15faf&is=69b00e2f&hm=026549c323101668d9846605ae0ebe88a6f1b8a5d60520cdf0ec55c8e47214cc&" alt="Screenshot 2" />
+      </div>
+      <div class="gallery-item" onclick="openLightbox(this)">
+        <img src="https://cdn.discordapp.com/attachments/1464271750421286962/1464271751545356361/Untitled263_20260123225136.png?ex=69b181d6&is=69b03056&hm=088c7c9a0380feb2d930ace69a521f37af6fb6e9a7ca39c82a403cf71673aa67&" alt="Screenshot 3" />
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-rule"></div>
+      <p class="footer-note">Elevator Game 64 — a fan project</p>
+    </div>
+
+  </div>
+
+  <!-- lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
+  <script>
+    // particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 38; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 2.6 + 0.8;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${Math.random()*100}%;
+        animation-duration:${14 + Math.random()*22}s;
+        animation-delay:${-Math.random()*28}s;
+      `;
+      container.appendChild(p);
+    }
+
+    // lightbox
+    function openLightbox(el) {
+      const src = el.querySelector('img').src;
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+
+</body>
+</html>
