@@ -24,7 +24,6 @@
       overflow-x: hidden;
     }
 
-    /* ---- background (fixed, same vibe as main) ---- */
     .bg {
       position: fixed;
       inset: 0;
@@ -71,7 +70,6 @@
       100% { transform:translateY(-8vh) translateX(12px); opacity:0; }
     }
 
-    /* ---- page scroll wrapper ---- */
     .page {
       position: relative;
       z-index: 10;
@@ -80,7 +78,6 @@
       padding: 4rem 2rem 6rem;
     }
 
-    /* ---- back link ---- */
     .back {
       display: inline-block;
       font-size: 0.62rem;
@@ -96,7 +93,6 @@
     }
     .back:hover { color: rgba(210,175,245,0.7); }
 
-    /* ---- hero title ---- */
     .hero-title {
       font-size: clamp(2.2rem, 6vw, 4rem);
       font-weight: 200;
@@ -111,7 +107,6 @@
       animation: fadeUp 1.2s ease 0.25s forwards;
     }
 
-    /* ---- main image ---- */
     .main-image-wrap {
       width: 100%;
       border-radius: 20px;
@@ -137,7 +132,6 @@
       border-radius: 20px;
     }
 
-    /* ---- description ---- */
     .description {
       font-size: clamp(0.92rem, 2vw, 1.05rem);
       font-weight: 300;
@@ -156,7 +150,6 @@
       font-weight: 400;
     }
 
-    /* ---- play button ---- */
     .play-wrap {
       margin-bottom: 4.5rem;
       opacity: 0;
@@ -200,7 +193,6 @@
     }
     .btn-play:active { transform: scale(0.97); }
 
-    /* ---- divider ---- */
     .divider {
       width: 100%;
       height: 1px;
@@ -210,7 +202,6 @@
       animation: fadeUp 1.4s ease 0.8s forwards;
     }
 
-    /* ---- screenshots label ---- */
     .section-label {
       font-size: 0.58rem;
       font-weight: 300;
@@ -222,7 +213,6 @@
       animation: fadeUp 1.4s ease 0.88s forwards;
     }
 
-    /* ---- side images grid ---- */
     .gallery {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -265,6 +255,121 @@
       border-radius: 14px;
     }
 
+    /* ---- changelog ---- */
+    .changelog-wrap {
+      margin-top: 4.5rem;
+      opacity: 0;
+      animation: fadeUp 1.6s ease 1.1s forwards;
+    }
+
+    .changelog-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .changelog-version {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.28rem 0.9rem;
+      border-radius: 100px;
+      background: rgba(140,55,220,0.18);
+      border: 1px solid rgba(210,175,245,0.15);
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      color: rgba(210,175,245,0.7);
+      text-transform: uppercase;
+    }
+    .changelog-version .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(185,120,255,0.7);
+      box-shadow: 0 0 6px rgba(185,120,255,0.8);
+      flex-shrink: 0;
+    }
+
+    .changelog-date {
+      font-size: 0.62rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: rgba(210,175,245,0.25);
+      letter-spacing: 0.08em;
+    }
+
+    .changelog-list {
+      list-style: none;
+      position: relative;
+      padding-left: 0;
+    }
+
+    /* vertical timeline line */
+    .changelog-list::before {
+      content: '';
+      position: absolute;
+      left: 0.55rem;
+      top: 0.6rem;
+      bottom: 0.4rem;
+      width: 1px;
+      background: linear-gradient(to bottom, rgba(185,120,255,0.35), rgba(185,120,255,0.05));
+    }
+
+    .changelog-list li {
+      position: relative;
+      padding: 0.45rem 0 0.45rem 2rem;
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: rgba(212,184,240,0.7);
+      letter-spacing: 0.015em;
+      line-height: 1.6;
+      transition: color 0.2s;
+    }
+    .changelog-list li:hover {
+      color: rgba(230,210,255,0.92);
+    }
+
+    /* tilde bullet */
+    .changelog-list li::before {
+      content: '~';
+      position: absolute;
+      left: 0;
+      top: 0.46rem;
+      width: 1.15rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: rgba(185,120,255,0.55);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* tag badges */
+    .tag {
+      display: inline-block;
+      font-size: 0.54rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.55rem;
+      border-radius: 100px;
+      margin-right: 0.45rem;
+      vertical-align: middle;
+      position: relative;
+      top: -0.06em;
+    }
+    .tag-add  { background: rgba(100,200,140,0.12); color: rgba(140,230,175,0.72); border: 1px solid rgba(100,200,140,0.2); }
+    .tag-fix  { background: rgba(200,150,90,0.12);  color: rgba(230,185,120,0.72); border: 1px solid rgba(200,150,90,0.2); }
+    .tag-change { background: rgba(100,160,230,0.12); color: rgba(145,195,255,0.72); border: 1px solid rgba(100,160,230,0.2); }
+    .tag-remove { background: rgba(220,90,110,0.12); color: rgba(255,130,145,0.72); border: 1px solid rgba(220,90,110,0.2); }
+
+    /* multiple version blocks */
+    .changelog-block + .changelog-block {
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(210,175,245,0.07);
+    }
+
     /* ---- footer ---- */
     .footer {
       margin-top: 5rem;
@@ -283,13 +388,11 @@
       letter-spacing: 0.1em;
     }
 
-    /* ---- animation ---- */
     @keyframes fadeUp {
       from { opacity:0; transform:translateY(20px); }
       to   { opacity:1; transform:translateY(0); }
     }
 
-    /* ---- lightbox ---- */
     .lightbox {
       position: fixed; inset: 0; z-index: 100;
       background: rgba(12,4,24,0.92);
@@ -365,6 +468,25 @@
       </div>
     </div>
 
+    <!-- ====== CHANGELOG ====== -->
+    <div class="changelog-wrap">
+
+      <p class="section-label">Changelog</p>
+
+      <!-- v0.3.9 -->
+      <div class="changelog-block">
+        <div class="changelog-header">
+          <span class="changelog-version"><span class="dot"></span>v0.3.9</span>
+          <span class="changelog-date">latest</span>
+        </div>
+        <ul class="changelog-list">
+          <li><span class="tag tag-add">add</span> OMM Spin from Coop 64 DX Mod</li>
+        </ul>
+      </div>
+
+    </div>
+    <!-- ====== END CHANGELOG ====== -->
+
     <div class="footer">
       <div class="footer-rule"></div>
       <p class="footer-note">Elevator Game 64 — a fan project</p>
@@ -372,13 +494,11 @@
 
   </div>
 
-  <!-- lightbox -->
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
     <img id="lightbox-img" src="" alt="" />
   </div>
 
   <script>
-    // particles
     const container = document.getElementById('particles');
     for (let i = 0; i < 38; i++) {
       const p = document.createElement('div');
@@ -393,7 +513,6 @@
       container.appendChild(p);
     }
 
-    // lightbox
     function openLightbox(el) {
       const src = el.querySelector('img').src;
       document.getElementById('lightbox-img').src = src;
